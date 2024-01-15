@@ -1,2 +1,280 @@
-## Лабораторная работа. Базовая настройка коммутатора 
+# Лабораторная работа. Базовая настройка коммутатора 
 
+## Топология
+
+![Topology](./images/topology.png)
+
+## Таблица адресации
+
+![Addressing table](./images/addressing_table.png)
+
+## Задачи
+
+* Часть 1. Проверка конфигурации коммутатора по умолчанию
+* Часть 2. Создание сети и настройка основных параметров устройства
+    * Настройте базовые параметры коммутатора.
+    * Настройте IP-адрес для ПК.
+* Часть 3. Проверка сетевых подключений
+    * Отобразите конфигурацию устройства.
+    * Протестируйте сквозное соединение, отправив эхо-запрос.
+    * Протестируйте возможности удаленного управления с помощью Telnet.
+
+### Часть 1. Создание сети и проверка настроек коммутатора по умолчанию
+
+    В первой части лабораторной работы вам предстоит настроить топологию сети и проверить настройку коммутатора по умолчанию.
+
+#### Шаг 1. Создайте сеть согласно топологии.
+
+*a. Подсоедините консольный кабель, как показано в топологии. На данном этапе не подключайте кабель Ethernet компьютера PC-A.
+Примечание. При использовании Netlab отключите интерфейс F0/6 на коммутаторе S1. Это имеет такой же эффект, как отсоединение компьютера PC-A от коммутатора S1.*
+
+*b. Установите консольное подключение к коммутатору с компьютера PC-A с помощью Tera Term или другой программы эмуляции терминала.
+Вопрос:
+
+>Почему нужно использовать консольное подключение для первоначальной настройки коммутатора? 
+>> В коммутаторе отсутсвуют настройки протоколов для удаленого подключения. 
+
+> Почему нельзя подключиться к коммутатору через Telnet или SSH?
+>> Нет настроек данных протоколов в комутаторе что не позволяет подключиться к нему.*
+
+#### Шаг 2. Проверьте настройки коммутатора по умолчанию.
+
+*a. Предположим, что коммутатор не имеет файла конфигурации, сохраненного в энергонезависимой памяти (NVRAM). Консольное подключение к коммутатору с помощью Tera Term или другой программы эмуляции терминала предоставит доступ к командной строке пользовательского режима EXEC в виде Switch>. Введите команду enable, чтобы войти в привилегированный режим EXEC.
+Откройте окно конфигурации
+Обратите внимание, что измененная в конфигурации строка будет отражать привилегированный режим EXEC.
+Убедитесь, что на коммутаторе находится пустой файл конфигурации по умолчанию, с помощью команды show running-config привилегированного режима EXEC. Если конфигурационный файл был предварительно сохранен, его нужно удалить. В зависимости от модели коммутатора и версии IOS ваша конфигурация может слегка отличаться. Тем не менее, настроенных паролей или IP-адресов в конфигурации быть не должно. Выполните очистку настроек и перезагрузите коммутатор, если ваш коммутатор имеет настройки, отличные от настроек по умолчанию.*
+
+*b. Изучите текущий файл running configuration.
+Вопросы:*
+
+> Сколько интерфейсов FastEthernet имеется на коммутаторе 2960?
+>> 24
+
+> Сколько интерфейсов Gigabit Ethernet имеется на коммутаторе 2960?
+>> 2
+
+> Каков диапазон значений, отображаемых в vty-линиях?
+>> 0 4  
+>> 5 15
+
+*c. Изучите файл загрузочной конфигурации (startup configuration), который содержится в энергонезависимом ОЗУ (NVRAM).*
+
+***startup-config is not present***
+
+*Вопрос:*
+>Почему появляется это сообщение?
+>>Данного файла конфигурации нет в коммутаторе.
+
+*d. Изучите характеристики SVI для VLAN 1.
+Вопросы:*
+
+>Назначен ли IP-адрес сети VLAN 1?
+>>Нет
+
+>Какой MAC-адрес имеет SVI? Возможны различные варианты ответов.
+>>0001.4270.e8c5 (bia 0001.4270.e8c5)
+
+>Данный интерфейс включен?
+>>Нет. Отключен
+
+*e. Изучите IP-свойства интерфейса SVI сети VLAN 1.
+Вопрос:*
+
+>Какие выходные данные вы видите?
+>>Ip Адреса нет
+
+*f. Подсоедините кабель Ethernet компьютера PC-A к порту 6 на коммутаторе и изучите IP-свойства интерфейса SVI сети VLAN 1. Дождитесь согласования параметров скорости и дуплекса между коммутатором и ПК.
+Примечание. При использовании Netlab включите интерфейс F0/6 на коммутаторе S1.
+Вопрос:*
+
+>Какие выходные данные вы видите?
+>>show interface f0/6, 100Mb/s
+
+*g. Изучите сведения о версии ОС Cisco IOS на коммутаторе.
+Вопросы:*
+
+>Под управлением какой версии ОС Cisco IOS работает коммутатор?
+>>version 15.0
+
+>Как называется файл образа системы?
+>>version 15.0
+
+>Какой базовый MAC-адрес назначен коммутатору?
+>>00:60:3E:DE:7B:9D
+
+*h.	Изучите свойства по умолчанию интерфейса FastEthernet, который используется компьютером PC-A.
+Switch# show interface f0/6* 
+
+<details><summary>Лог</summary>
+<pre>
+    Switch>show interface f0/6
+FastEthernet0/6 is up, line protocol is up (connected)
+  Hardware is Lance, address is 0060.5c4a.e706 (bia 0060.5c4a.e706)
+ BW 100000 Kbit, DLY 1000 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation ARPA, loopback not set
+  Keepalive set (10 sec)
+  Full-duplex, 100Mb/s
+  input flow-control is off, output flow-control is off
+  ARP type: ARPA, ARP Timeout 04:00:00
+  Last input 00:00:08, output 00:00:05, output hang never
+  Last clearing of "show interface" counters never
+  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue :0/40 (size/max)
+  5 minute input rate 0 bits/sec, 0 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     956 packets input, 193351 bytes, 0 no buffer
+     Received 956 broadcasts, 0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+     0 watchdog, 0 multicast, 0 pause input
+     0 input packets with dribble condition detected
+     2357 packets output, 263570 bytes, 0 underruns
+     0 output errors, 0 collisions, 10 interface resets
+     0 babbles, 0 late collision, 0 deferred
+     0 lost carrier, 0 no carrier
+     0 output buffer failures, 0 output buffers swapped out
+
+</pre>
+</details>
+
+> Интерфейс включен или выключен?
+>> Выключен
+
+
+> Что нужно сделать, чтобы включить интерфейс?
+>> ввести команду **noshutdown**
+
+
+> Какой MAC-адрес у интерфейса?
+>> 0060.5c4a.e706
+
+
+> Какие настройки скорости и дуплекса заданы в интерфейсе?
+>> Full-duplex, 100Mb/s
+
+
+*i.	Изучите параметры сети VLAN по умолчанию на коммутаторе.*
+
+<details><summary>Лог Vlan (brief) </summary>
+<pre>
+Switch>show  vlan brief
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/1, Fa0/2, Fa0/3, Fa0/4
+                                                Fa0/5, Fa0/6, Fa0/7, Fa0/8
+                                                Fa0/9, Fa0/10, Fa0/11, Fa0/12
+                                                Fa0/13, Fa0/14, Fa0/15, Fa0/16
+                                                Fa0/17, Fa0/18, Fa0/19, Fa0/20
+                                                Fa0/21, Fa0/22, Fa0/23, Fa0/24
+                                                Gig0/1, Gig0/2
+1002 fddi-default                     active    
+1003 token-ring-default               active    
+1004 fddinet-default                  active    
+1005 trnet-default                    active   
+</pre>
+</details>
+
+
+<details><summary>Лог Vlan 1</summary>
+<pre>
+Switch>show interfaces vlan 1
+Vlan1 is administratively down, line protocol is down
+  Hardware is CPU Interface, address is 0004.9ab3.922e (bia 0004.9ab3.922e)
+  MTU 1500 bytes, BW 100000 Kbit, DLY 1000000 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation ARPA, loopback not set
+  ARP type: ARPA, ARP Timeout 04:00:00
+  Last input 21:40:21, output never, output hang never
+  Last clearing of "show interface" counters never
+  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue: 0/40 (size/max)
+  5 minute input rate 0 bits/sec, 0 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     1682 packets input, 530955 bytes, 0 no buffer
+     Received 0 broadcasts (0 IP multicast)
+     0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+     563859 packets output, 0 bytes, 0 underruns
+     0 output errors, 23 interface resets
+     0 output buffer failures, 0 output buffers swapped out
+</pre>
+</details>
+
+> Какое имя присвоено сети VLAN 1 по умолчанию?
+>> default (по умолчанию нет имени)
+
+> Какие порты расположены в сети VLAN 1?
+>> Все
+
+> Активна ли сеть VLAN 1?
+>> да
+
+> К какому типу сетей VLAN принадлежит VLAN по умолчанию?
+> >  VLAN1
+
+
+j.	Изучите флеш-память.
+Выполните одну из следующих команд, чтобы изучить содержимое флеш-каталога.
+
+Switch# show flash 
+
+Switch# dir flash: 
+
+
+<details><summary>Лог </summary>
+<pre>
+Switch#dir flash:
+Directory of flash:/
+
+    1  -rw-     4670455          <no date>  2960-lanbasek9-mz.150-2.SE4.bin
+
+64016384 bytes total (59345929 bytes free)
+Switch#show flash
+Directory of flash:/
+
+    1  -rw-     4670455          <no date>  2960-lanbasek9-mz.150-2.SE4.bin
+
+64016384 bytes total (59345929 bytes free)
+</pre>
+</details>
+
+В конце имени файла указано расширение, например .bin. Каталоги не имеют расширения файла.
+
+> Какое имя присвоено образу Cisco IOS?
+>> 2960-lanbasek9-mz.150-2.SE4
+---
+
+### Часть 2. Настройка базовых параметров сетевых устройств
+
+#### Шаг 1. Настройте базовые параметры коммутатора.
+
+a.	В режиме глобальной конфигурации скопируйте следующие базовые параметры конфигурации и вставьте их в файл на коммутаторе S1. 
+
+![image](./images/2_1.png)
+
+
+b.	Назначьте IP-адрес интерфейсу SVI на коммутаторе. Благодаря этому вы получите возможность удаленного управления коммутатором.
+
+![image](./images/2_2.png)
+
+
+c.	Доступ через порт консоли также следует ограничить  с помощью пароля. Используйте cisco в качестве пароля для входа в консоль в этом задании. Конфигурация по умолчанию разрешает все консольные подключения без пароля. Чтобы консольные сообщения не прерывали выполнение команд, используйте параметр logging synchronous.
+
+![image](./images/2_3.png)
+
+
+d.	Настройте каналы виртуального соединения для удаленного управления (vty), чтобы коммутатор разрешил доступ через Telnet. Если не настроить пароль VTY, будет невозможно подключиться к коммутатору по протоколу Telnet.
+
+![image](./images/2_4.png)
+
+> Для чего нужна команда login?
+>> С помощью команды login указываем циске при подключении запрос пароля 
+
+#### Шаг 2. Настройте IP-адрес на компьютере PC-A.
+
+![image](./images/2_5.png)c
+
+---
