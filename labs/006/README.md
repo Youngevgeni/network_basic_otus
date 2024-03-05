@@ -229,7 +229,7 @@ S2#
 
 PC-A(PC0)           |  PC-B(PC1)
 :-------------------------:|:-------------------------:
-![images](./images/2.png)  |  ![images](./images/2.png)
+![images](./images/2.png)  |  ![images](./images/3.png)
 
 ### Часть 2. Создание сетей VLAN и назначение портов коммутатора
 
@@ -238,9 +238,7 @@ PC-A(PC0)           |  PC-B(PC1)
 S1          |  S2
 :-------------------------:|:-------------------------:
 ![images](./images/4.png)  |  ![images](./images/6.png)
-![images](./images/5.png)  |  ![images](./images/7.png)
 ![images](./images/8.png)  |  ![images](./images/10.png)
-![images](./images/9.png)  |  ![images](./images/11.png)
 
 #### Шаг 2. Назначьте сети VLAN соответствующим интерфейсам коммутатора
 
@@ -277,10 +275,11 @@ S1          |  S2
 #### Шаг 1. Выполните следующие тесты с PC-A. Все должно быть успешно
 
 ![images](./images/21.png)
+![images](./images/22.png)
 
 #### Шаг 2. Пройдите следующий тест с PC-B
 
-![images](./images/22.png)
+![images](./images/23.png)
 
 >Какие промежуточные IP-адреса отображаются в результатах?
 >>Отображаются два адреса 192.168.30.1(Router), 192.168.20.3(PC-A)
